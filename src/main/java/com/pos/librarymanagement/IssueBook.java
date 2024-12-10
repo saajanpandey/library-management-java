@@ -126,16 +126,21 @@ public class IssueBook extends javax.swing.JFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(40, 40, 40)
                 .addGroup(bookJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(searchTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
-                    .addComponent(bookIsbn)
-                    .addComponent(copiesText)
-                    .addComponent(publisherText)
-                    .addComponent(editionText)
-                    .addComponent(authorText)
-                    .addComponent(bookTitle, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(18, 18, 18)
-                .addComponent(searchBtn)
-                .addGap(19, 19, 19))
+                    .addGroup(bookJpanelLayout.createSequentialGroup()
+                        .addGroup(bookJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(searchTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                            .addComponent(bookIsbn)
+                            .addComponent(copiesText)
+                            .addComponent(editionText))
+                        .addGap(18, 18, 18)
+                        .addComponent(searchBtn)
+                        .addGap(19, 19, 19))
+                    .addGroup(bookJpanelLayout.createSequentialGroup()
+                        .addGroup(bookJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(bookTitle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                            .addComponent(publisherText, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(authorText, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         bookJpanelLayout.setVerticalGroup(
             bookJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -352,6 +357,10 @@ public class IssueBook extends javax.swing.JFrame {
                 date1 = LocalDate.parse(formattedDate, dtfymd);
 
                 if (date1.isAfter(today)) {
+                    JOptionPane.showMessageDialog(null, "Book cannot be issued", "Error Message", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                if (date1.isBefore(today)) {
                     JOptionPane.showMessageDialog(null, "Book cannot be issued", "Error Message", JOptionPane.WARNING_MESSAGE);
                     return;
                 }

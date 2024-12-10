@@ -92,17 +92,26 @@
                   </Group>
                   <EmptySpace min="40" pref="40" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="searchTextField" alignment="0" pref="119" max="32767" attributes="0"/>
-                      <Component id="bookIsbn" alignment="0" max="32767" attributes="0"/>
-                      <Component id="copiesText" max="32767" attributes="0"/>
-                      <Component id="publisherText" alignment="0" max="32767" attributes="0"/>
-                      <Component id="editionText" max="32767" attributes="0"/>
-                      <Component id="authorText" alignment="0" max="32767" attributes="0"/>
-                      <Component id="bookTitle" alignment="1" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="searchTextField" alignment="0" pref="119" max="32767" attributes="0"/>
+                              <Component id="bookIsbn" alignment="0" max="32767" attributes="0"/>
+                              <Component id="copiesText" max="32767" attributes="0"/>
+                              <Component id="editionText" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                          <Component id="searchBtn" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="bookTitle" alignment="0" pref="179" max="32767" attributes="0"/>
+                              <Component id="publisherText" alignment="0" max="32767" attributes="0"/>
+                              <Component id="authorText" alignment="0" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                  <Component id="searchBtn" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

@@ -250,7 +250,7 @@ public class LoginForm extends javax.swing.JFrame {
     public boolean validateInput() {
 
         if (emailTextField.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Username is required.");
+            JOptionPane.showMessageDialog(null, "Email is required.");
             emailTextField.requestFocus();
             return false;
 

@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.JOptionPane;
@@ -299,6 +301,19 @@ public class NewBook extends javax.swing.JFrame {
 
                 Date date = inputFormat.parse(purchasedDate.getText());
                 String formattedDate = outputFormat.format(date);
+                
+                 LocalDate today = LocalDate.now();
+
+                final DateTimeFormatter dtfymd
+                        = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                LocalDate date1;
+                date1 = LocalDate.parse(formattedDate, dtfymd);
+
+                if (date1.isAfter(today)) {
+                    JOptionPane.showMessageDialog(null, "Book cannot be added", "Error Message", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
                 try (Connection con = SqlConnect.connect()) {
                     PreparedStatement smt
@@ -321,7 +336,6 @@ public class NewBook extends javax.swing.JFrame {
                     smt.executeUpdate();
                     ps.executeUpdate();
                     con.close();
-                    this.dispose();
 
                     JOptionPane.showMessageDialog(null, "New Book Added Successfully!");
 
