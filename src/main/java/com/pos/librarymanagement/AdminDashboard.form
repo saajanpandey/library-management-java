@@ -136,7 +136,7 @@
                   <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                   <Component id="newBook" min="-2" pref="126" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
-                  <Component id="statistics" min="-2" pref="126" max="-2" attributes="0"/>
+                  <Component id="reportsBtn" min="-2" pref="126" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
                   <Component id="newStudents" min="-2" pref="126" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
@@ -149,7 +149,7 @@
                   <EmptySpace pref="32" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="newStudents" alignment="3" min="-2" pref="100" max="-2" attributes="0"/>
-                      <Component id="statistics" alignment="3" min="-2" pref="100" max="-2" attributes="0"/>
+                      <Component id="reportsBtn" alignment="3" min="-2" pref="100" max="-2" attributes="0"/>
                       <Component id="newBook" alignment="3" min="-2" pref="100" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
@@ -166,10 +166,13 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newStudentsActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="statistics">
+        <Component class="javax.swing.JButton" name="reportsBtn">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Statistics"/>
+            <Property name="text" type="java.lang.String" value="Reports"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reportsBtnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="newBook">
           <Properties>

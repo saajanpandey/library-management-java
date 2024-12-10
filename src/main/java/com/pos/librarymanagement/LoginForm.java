@@ -165,10 +165,7 @@ public class LoginForm extends javax.swing.JFrame {
 
             String username = emailTextField.getText();
             char[] password = passwordTextField.getPassword();
-            String role = (adminRadio.isSelected()) ? "admin" :"user"; // ternary operator isSelected use garera admin ra user rakhane
-            // fix button group
-            
-            System.out.print(role);
+            String role = (adminRadio.isSelected()) ? "admin" :"user"; 
 
             String pass = new String(password);
 
@@ -190,8 +187,9 @@ public class LoginForm extends javax.swing.JFrame {
                         ad.setVisible(true);
                     } else {
                         this.dispose();
+                        int id = rs.getInt(1);
                         String name = "Welcome " + rs.getString(2) + " " + rs.getString(3);
-                        UserDashboard ad = new UserDashboard(name);
+                        UserDashboard ad = new UserDashboard(name,id);
                         ad.setVisible(true);
                     }
 

@@ -44,7 +44,7 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         operationPanel = new javax.swing.JPanel();
         newStudents = new javax.swing.JButton();
-        statistics = new javax.swing.JButton();
+        reportsBtn = new javax.swing.JButton();
         newBook = new javax.swing.JButton();
         actionPanel = new javax.swing.JPanel();
         addLibrarian = new javax.swing.JButton();
@@ -72,7 +72,12 @@ public class AdminDashboard extends javax.swing.JFrame {
             }
         });
 
-        statistics.setText("Statistics");
+        reportsBtn.setText("Reports");
+        reportsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportsBtnActionPerformed(evt);
+            }
+        });
 
         newBook.setText("New Book");
         newBook.addActionListener(new java.awt.event.ActionListener() {
@@ -89,7 +94,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addComponent(newBook, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(78, 78, 78)
-                .addComponent(statistics, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(reportsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(85, 85, 85)
                 .addComponent(newStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -100,7 +105,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 .addContainerGap(32, Short.MAX_VALUE)
                 .addGroup(operationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(statistics, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(reportsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(newBook, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16))
         );
@@ -309,6 +314,12 @@ public class AdminDashboard extends javax.swing.JFrame {
         bi.setVisible(true);
     }//GEN-LAST:event_bookInventoryBtnActionPerformed
 
+    private void reportsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportsBtnActionPerformed
+        // TODO add your handling code here:
+        Reports report = new Reports();
+        report.setVisible(true);
+    }//GEN-LAST:event_reportsBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -360,8 +371,8 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JButton newBook;
     private javax.swing.JButton newStudents;
     private javax.swing.JPanel operationPanel;
+    private javax.swing.JButton reportsBtn;
     private javax.swing.JButton returnBook;
-    private javax.swing.JButton statistics;
     private javax.swing.JMenu updateMenu;
     private javax.swing.JLabel welcomeMessage;
     // End of variables declaration//GEN-END:variables

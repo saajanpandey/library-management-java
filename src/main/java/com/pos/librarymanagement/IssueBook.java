@@ -339,6 +339,16 @@ public class IssueBook extends javax.swing.JFrame {
             String formattedDate = outputFormat.format(date);
 
             try (Connection con = SqlConnect.connect()) {
+                
+                PreparedStatement psCheck = con.prepareStatement("Select count from book_count where book_id=? ");
+                 psCheck.setString(1, bookID);
+                ResultSet rsCheck =  psCheck.executeQuery();
+                rsCheck.next();
+                String patCheck = rsCheck.getString("count");
+                int countCheck = Integer.parseInt(patCheck);
+                
+                if(countCheck > 0){
+                
 
                 PreparedStatement smt
                         = con.prepareStatement("INSERT INTO `book_issues`(`user_id`, `book_id`, `date`) VALUES (?,?,?)");
@@ -367,6 +377,10 @@ public class IssueBook extends javax.swing.JFrame {
                 con.close();
 
                 JOptionPane.showMessageDialog(null, "Book Issued");
+                }
+                else{
+                     JOptionPane.showMessageDialog(null, "There is no book in the library to issue!");
+                }
 
             }
         } catch (SQLException  | ParseException e) {

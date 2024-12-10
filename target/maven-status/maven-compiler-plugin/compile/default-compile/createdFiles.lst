@@ -1,4 +1,5 @@
 com/pos/librarymanagement/AdminDashboard$7.class
+com/pos/librarymanagement/UserDashboard$2.class
 com/pos/librarymanagement/AdminDashboard.class
 com/pos/librarymanagement/Publisher$3.class
 com/pos/librarymanagement/SignUp$2.class
@@ -43,11 +44,14 @@ com/pos/librarymanagement/Author$5.class
 com/pos/librarymanagement/NewStudents$5.class
 com/pos/librarymanagement/Author.class
 com/pos/librarymanagement/AdminDashboard$2.class
+com/pos/librarymanagement/AdminDashboard$12.class
 com/pos/librarymanagement/Author$1.class
 com/pos/librarymanagement/AddLibrarian$2.class
+com/pos/librarymanagement/UserDashboard$4.class
 com/pos/librarymanagement/NewBook$3.class
 com/pos/librarymanagement/AdminDashboard$5.class
 com/pos/librarymanagement/IssueBook$3.class
+com/pos/librarymanagement/Reports.class
 com/pos/librarymanagement/Author$4.class
 com/pos/librarymanagement/UserDashboard.class
 com/pos/librarymanagement/NewBook$6.class
@@ -68,6 +72,8 @@ com/pos/librarymanagement/AddLibrarian$3.class
 com/pos/librarymanagement/BookInventory$2.class
 com/pos/librarymanagement/NewStudents$4.class
 com/pos/librarymanagement/AdminDashboard$11.class
+com/pos/librarymanagement/Reports$1.class
 com/pos/librarymanagement/AdminDashboard$9.class
+com/pos/librarymanagement/UserDashboard$3.class
 com/pos/librarymanagement/IssueBook$4.class
 com/pos/librarymanagement/LoginForm.class

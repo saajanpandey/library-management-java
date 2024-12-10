@@ -4,6 +4,13 @@
  */
 package com.pos.librarymanagement;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import net.proteanit.sql.DbUtils;
+
 /**
  *
  * @author saajan
@@ -16,14 +23,47 @@ public class UserDashboard extends javax.swing.JFrame {
     public UserDashboard() {
         initComponents();
     }
-    
-    public UserDashboard(String name){
+
+    public UserDashboard(String name, int id) {
         initComponents();
-        try{
-//        welcomeMessage.setText(name);
+        returnBook(id);
+        refreshTable(id);
+        try {
+            welcomeMessage.setText(name);
+        } catch (Exception e) {
+            this.dispose();
+            LoginForm lg = new LoginForm();
+            lg.setVisible(true);
         }
-        catch(Exception e)
-        {
+
+    }
+    
+    private void refreshTable(int id) {
+        try (Connection con = SqlConnect.connect()) {
+
+            PreparedStatement ps = con.prepareStatement("Select books.name from book_issues "
+                    + "JOIN books on books.isbn= book_issues.book_id   WHERE book_issues.user_id=? ");
+            ps.setInt(1,id);
+            ResultSet rs = ps.executeQuery();
+            jBookTable.setModel(DbUtils.resultSetToTableModel(rs));
+            jBookTable.getColumnModel().getColumn(0).setHeaderValue("Book Title");
+        } catch (Exception e) {
+             JOptionPane.showMessageDialog(null, "Something Wen Wrong!");
+        }
+    }
+
+    private void returnBook(int id) {
+        try (Connection con = SqlConnect.connect()) {
+            PreparedStatement ps = con.prepareStatement("Select COUNT(user_id) as total from book_issues where user_id=? ");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int count = rs.getInt("total");
+            String countString = String.valueOf(count);
+            returnNumber.setText( countString);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
             this.dispose();
             LoginForm lg = new LoginForm();
             lg.setVisible(true);
@@ -39,21 +79,141 @@ public class UserDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        welcomeMessage = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        returnNumber = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jBookTable = new javax.swing.JTable();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        exitItem = new javax.swing.JMenuItem();
+        logoutItem = new javax.swing.JMenuItem();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        welcomeMessage.setText("Welcome");
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setText("Books To Return");
+
+        returnNumber.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        returnNumber.setText("Number");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(returnNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(34, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(returnNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jBookTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Book Title"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jBookTable);
+
+        jMenu1.setText("File");
+
+        exitItem.setText("Exit");
+        exitItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(exitItem);
+
+        logoutItem.setText("Logout");
+        logoutItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(logoutItem);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 674, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(welcomeMessage)
+                .addGap(151, 151, 151))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 454, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addComponent(welcomeMessage)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(77, 77, 77)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void exitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitItemActionPerformed
+        // TODO add your handling code here:
+        int choice = JOptionPane.showConfirmDialog(null, "Do you want to exit?",
+                "Confirmation", JOptionPane.YES_NO_OPTION);
+
+        if (choice == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }//GEN-LAST:event_exitItemActionPerformed
+
+    private void logoutItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutItemActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        LoginForm log = new LoginForm();
+        log.setVisible(true);
+    }//GEN-LAST:event_logoutItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -91,5 +251,15 @@ public class UserDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem exitItem;
+    private javax.swing.JTable jBookTable;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuItem logoutItem;
+    private javax.swing.JLabel returnNumber;
+    private javax.swing.JLabel welcomeMessage;
     // End of variables declaration//GEN-END:variables
 }
