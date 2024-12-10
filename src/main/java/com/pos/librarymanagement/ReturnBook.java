@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -66,6 +68,7 @@ public class ReturnBook extends javax.swing.JFrame {
         backBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Return Books");
         setResizable(false);
 
         bookJpanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Book", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
@@ -274,7 +277,7 @@ public class ReturnBook extends javax.swing.JFrame {
         try (Connection con = SqlConnect.connect()) {
 
             PreparedStatement ps = con.prepareStatement("SELECT books.isbn, books.name, authors.name,publishers.name, books.published_year, books.copies_owned,books.edition,books.price,books.date_purchased FROM books "
-                + "JOIN authors ON authors.id = books.author_id JOIN publishers ON publishers.id = books.publisher_id WHERE books.isbn=? ");
+                    + "JOIN authors ON authors.id = books.author_id JOIN publishers ON publishers.id = books.publisher_id WHERE books.isbn=? ");
 
             ps.setString(1, searchTextField.getText());
             ResultSet rs = ps.executeQuery();
@@ -314,49 +317,74 @@ public class ReturnBook extends javax.swing.JFrame {
 
     private void returnBookBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnBookBtnActionPerformed
         // TODO add your handling code here:
-        
-        String studentID = studentIDText.getText();
-        String bookID = bookIsbn.getText();
-        try{
-            SimpleDateFormat inputFormat = new SimpleDateFormat("MMMM dd, yyyy");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(validInput()){
+            String studentID = studentIDText.getText();
+            String bookID = bookIsbn.getText();
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("MMMM dd, yyyy");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-            Date date = inputFormat.parse(returnDate.getText());
-            String formattedDate = outputFormat.format(date);
-        try (Connection con = SqlConnect.connect()) {
+                Date date = inputFormat.parse(returnDate.getText());
+                String formattedDate = outputFormat.format(date);
 
-            PreparedStatement smt
-            = con.prepareStatement("INSERT INTO `book_returns`(`user_id`, `book_id`, `date`) VALUES (?,?,?)");
+                LocalDate today = LocalDate.now();
 
-            smt.setString(1, studentID);
-            smt.setString(2, bookID);
-            smt.setString(3, formattedDate);
-            smt.executeUpdate();
-            returnDate.setText("");
-            studentIDText.setText("");
-            bookIsbn.setText("");
+                final DateTimeFormatter dtfymd
+                        = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-            PreparedStatement ps = con.prepareStatement("Select count from book_count where book_id=? ");
-            ps.setString(1, bookID);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-            String pat = rs.getString("count");
-            int previousCount = Integer.parseInt(pat);
-            int newCount = previousCount + 1;
+                LocalDate date1;
+                date1 = LocalDate.parse(formattedDate, dtfymd);
 
-            PreparedStatement psInsert = con.prepareStatement("UPDATE book_count Set count=? WHERE book_id = ? ");
-            psInsert.setInt(1, newCount);
-            psInsert.setString(2, bookID);
-            psInsert.executeUpdate();
+                if (date1.isBefore(today)) {
+                    JOptionPane.showMessageDialog(null, "Book cannot be returned", "Error Message", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
-            con.close();
+                try (Connection con = SqlConnect.connect()) {
 
-            JOptionPane.showMessageDialog(null, "Book Returned");
+                    PreparedStatement smt
+                            = con.prepareStatement("INSERT INTO `book_returns`(`user_id`, `book_id`, `date`) VALUES (?,?,?)");
 
-        }
-        }catch (SQLException | ParseException e) {
-            System.out.print(e);
-            JOptionPane.showMessageDialog(null, "Book cannot be returned", "Error Message", JOptionPane.WARNING_MESSAGE);
+                    smt.setString(1, studentID);
+                    smt.setString(2, bookID);
+                    smt.setString(3, formattedDate);
+                    smt.executeUpdate();
+                    returnDate.setText("");
+                    studentIDText.setText("");
+                    bookIsbn.setText("");
+                    authorText.setText("");
+                    bookTitle.setText("");
+                    copiesText.setText("");
+                    editionText.setText("");
+                    firstNameText.setText("");
+                    lastNameText.setText("");
+                    publisherText.setText("");
+                    returnDate.setText("");
+                    searchTextField.setText("");
+                    studentIDText.setText("");
+
+                    PreparedStatement ps = con.prepareStatement("Select count from book_count where book_id=? ");
+                    ps.setString(1, bookID);
+                    ResultSet rs = ps.executeQuery();
+                    rs.next();
+                    String pat = rs.getString("count");
+                    int previousCount = Integer.parseInt(pat);
+                    int newCount = previousCount + 1;
+
+                    PreparedStatement psInsert = con.prepareStatement("UPDATE book_count Set count=? WHERE book_id = ? ");
+                    psInsert.setInt(1, newCount);
+                    psInsert.setString(2, bookID);
+                    psInsert.executeUpdate();
+
+                    con.close();
+
+                    JOptionPane.showMessageDialog(null, "Book Returned");
+
+                }
+            } catch (SQLException | ParseException e) {
+                System.out.print(e);
+                JOptionPane.showMessageDialog(null, "Book cannot be returned", "Error Message", JOptionPane.WARNING_MESSAGE);
+            }
         }
     }//GEN-LAST:event_returnBookBtnActionPerformed
 
@@ -398,6 +426,19 @@ public class ReturnBook extends javax.swing.JFrame {
                 new ReturnBook().setVisible(true);
             }
         });
+    }
+
+    public boolean validInput() {
+        if (studentIDText.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Student Id is required.");
+            studentIDText.requestFocus();
+            return false;
+
+        } else if (bookIsbn.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Book ISBN is required.");
+            return false;
+        }
+        return true;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

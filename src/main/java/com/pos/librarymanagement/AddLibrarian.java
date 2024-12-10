@@ -48,6 +48,7 @@ public class AddLibrarian extends javax.swing.JFrame {
         backBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Add Librarian");
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Add Librarian", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));

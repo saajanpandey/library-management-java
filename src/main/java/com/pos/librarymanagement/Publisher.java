@@ -25,7 +25,7 @@ public class Publisher extends javax.swing.JFrame {
         initComponents();
         refreshTable();
     }
-    
+
     private void refreshTable() {
         try (Connection con = SqlConnect.connect()) {
 
@@ -61,6 +61,7 @@ public class Publisher extends javax.swing.JFrame {
         jPubTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Publisher Operations");
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Add Publisher", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
@@ -192,23 +193,25 @@ public class Publisher extends javax.swing.JFrame {
 
     private void addPublisherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPublisherActionPerformed
         // TODO add your handling code here:
-        String name = pubName.getText();
+        if (validateInput()) {
+            String name = pubName.getText();
 
-        try (Connection con = SqlConnect.connect()) {
+            try (Connection con = SqlConnect.connect()) {
 
-            PreparedStatement smt
-                    = con.prepareStatement("INSERT INTO publishers"
-                            + "(`name`)  VALUES (?)");
-            smt.setString(1, name);
-            smt.executeUpdate();
-            pubName.setText("");
+                PreparedStatement smt
+                        = con.prepareStatement("INSERT INTO publishers"
+                                + "(`name`)  VALUES (?)");
+                smt.setString(1, name);
+                smt.executeUpdate();
+                pubName.setText("");
 
-            con.close();
+                con.close();
 
-            JOptionPane.showMessageDialog(null, "Publisher Created Successfully");
+                JOptionPane.showMessageDialog(null, "Publisher Created Successfully");
 
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error Message", JOptionPane.WARNING_MESSAGE);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error Message", JOptionPane.WARNING_MESSAGE);
+            }
         }
         refreshTable();
     }//GEN-LAST:event_addPublisherActionPerformed
@@ -216,21 +219,19 @@ public class Publisher extends javax.swing.JFrame {
     private void updateAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateAuthorActionPerformed
         // TODO add your handling code here:
 
-        try (Connection con = SqlConnect.connect()){
+        try (Connection con = SqlConnect.connect()) {
 
             PreparedStatement ps = con.prepareStatement("UPDATE publishers set name=? where id=? ");
 
-            ps.setString(1,pubName.getText());
-            ps.setString(2,pubId.getText());
+            ps.setString(1, pubName.getText());
+            ps.setString(2, pubId.getText());
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null,"Publisher Is Updated");
+            JOptionPane.showMessageDialog(null, "Publisher Is Updated");
             pubName.setText("");
             pubId.setText("");
 
-        }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null,"Record Not Updated","Alert",JOptionPane.WARNING_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Record Not Updated", "Alert", JOptionPane.WARNING_MESSAGE);
         }
         refreshTable();
     }//GEN-LAST:event_updateAuthorActionPerformed
@@ -256,7 +257,7 @@ public class Publisher extends javax.swing.JFrame {
 
     private void jPubTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPubTableMouseClicked
         // TODO add your handling code here:
-         // TODO add your handling code here:
+        // TODO add your handling code here:
         int i = jPubTable.getSelectedRow();
         TableModel model = jPubTable.getModel();
         pubId.setText(model.getValueAt(i, 0).toString());
@@ -296,6 +297,15 @@ public class Publisher extends javax.swing.JFrame {
                 new Publisher().setVisible(true);
             }
         });
+    }
+
+    public boolean validateInput() {
+        if (pubName.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Publisher Name is required.");
+            pubName.requestFocus();
+            return false;
+        }
+        return true;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -49,6 +49,7 @@ public class BookInventory extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Book Inventory");
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Book Inventory", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
@@ -216,35 +217,37 @@ public class BookInventory extends javax.swing.JFrame {
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
         // TODO add your handling code here:
-        int newCopies = Integer.parseInt(newCopiesText.getText());
+        if (validateInput()) {
+            int newCopies = Integer.parseInt(newCopiesText.getText());
 
-        int oldCopies = Integer.parseInt(copiesText.getText());
+            int oldCopies = Integer.parseInt(copiesText.getText());
 
-        int finalCopies = oldCopies + newCopies;
+            int finalCopies = oldCopies + newCopies;
 
-        try (Connection con = SqlConnect.connect()) {
+            try (Connection con = SqlConnect.connect()) {
 
-            PreparedStatement psInsert = con.prepareStatement("UPDATE book_count Set count=? WHERE book_id = ? ");
-            psInsert.setInt(1, finalCopies);
-            psInsert.setString(2, isbnSearchText.getText());
-            psInsert.executeUpdate();
-            
-            PreparedStatement ps = con.prepareStatement("UPDATE books SET copies_owned = copies_owned + ? WHERE isbn = ? ");
-            ps.setInt(1, newCopies);
-            ps.setString(2, isbnSearchText.getText());
-            ps.executeUpdate();
+                PreparedStatement psInsert = con.prepareStatement("UPDATE book_count Set count=? WHERE book_id = ? ");
+                psInsert.setInt(1, finalCopies);
+                psInsert.setString(2, isbnSearchText.getText());
+                psInsert.executeUpdate();
 
-            con.close();
-            
-            bookTitleText.setText("");
-            copiesText.setText("");
-            authorNameText.setText("");
-            publisherNameText.setText("");
-            newCopiesText.setText("");
-            JOptionPane.showMessageDialog(null, "Book Inventory updated!");
-        } catch (Exception e) {
-            System.out.print(e);
-            JOptionPane.showMessageDialog(null, "Book Inventory not updated!");
+                PreparedStatement ps = con.prepareStatement("UPDATE books SET copies_owned = copies_owned + ? WHERE isbn = ? ");
+                ps.setInt(1, newCopies);
+                ps.setString(2, isbnSearchText.getText());
+                ps.executeUpdate();
+
+                con.close();
+
+                bookTitleText.setText("");
+                copiesText.setText("");
+                authorNameText.setText("");
+                publisherNameText.setText("");
+                newCopiesText.setText("");
+                JOptionPane.showMessageDialog(null, "Book Inventory updated!");
+            } catch (Exception e) {
+                System.out.print(e);
+                JOptionPane.showMessageDialog(null, "Book Inventory not updated!");
+            }
         }
     }//GEN-LAST:event_updateBtnActionPerformed
 
@@ -281,6 +284,16 @@ public class BookInventory extends javax.swing.JFrame {
                 new BookInventory().setVisible(true);
             }
         });
+    }
+
+    public boolean validateInput() {
+        if (newCopiesText.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "New Copies is required.");
+            newCopiesText.requestFocus();
+            return false;
+
+        }
+        return true;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

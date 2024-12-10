@@ -28,11 +28,11 @@ public class NewStudents extends javax.swing.JFrame {
         initComponents();
         refreshTable();
     }
-    
-     private void refreshTable() {
+
+    private void refreshTable() {
         try (Connection con = SqlConnect.connect()) {
 
-            PreparedStatement ps = con.prepareStatement("Select id, first_name,last_name,email from users");
+            PreparedStatement ps = con.prepareStatement("Select id, first_name,last_name,email from users WHERE role=\"user\"");
             ResultSet rs = ps.executeQuery();
             jStudents.setModel(DbUtils.resultSetToTableModel(rs));
             jStudents.getColumnModel().getColumn(0).setHeaderValue("ID");
@@ -69,6 +69,7 @@ public class NewStudents extends javax.swing.JFrame {
         updateBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Student Operations");
         setResizable(false);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "New Students", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
@@ -255,15 +256,14 @@ public class NewStudents extends javax.swing.JFrame {
         TableModel model = jStudents.getModel();
         firstNameField.setText(model.getValueAt(i, 1).toString());
         lastNameField.setText(model.getValueAt(i, 2).toString());
-         emailField.setText(model.getValueAt(i, 3).toString());
-         emailField.setEditable(false);
+        emailField.setText(model.getValueAt(i, 3).toString());
+        emailField.setEditable(false);
+        passwordField.setEditable(false);
     }//GEN-LAST:event_jStudentsMouseClicked
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
         // TODO add your handling code here:
-         try (Connection con = SqlConnect.connect()) {
-             
-             
+        try (Connection con = SqlConnect.connect()) {
 
             PreparedStatement ps = con.prepareStatement("UPDATE users set first_name=?, last_name=? where email=? ");
 

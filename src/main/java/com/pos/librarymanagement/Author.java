@@ -61,9 +61,10 @@ public class Author extends javax.swing.JFrame {
         updateAuthor = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Author Operations");
         setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Add Author", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Author Operations", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
 
         authorNameLabel.setText("Name");
 
@@ -193,23 +194,27 @@ public class Author extends javax.swing.JFrame {
 
     private void addAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAuthorActionPerformed
         // TODO add your handling code here:
-        String name = authName.getText();
 
-        try (Connection con = SqlConnect.connect()) {
+        if (validateInput()) {
 
-            PreparedStatement smt
-                    = con.prepareStatement("INSERT INTO authors"
-                            + "(`name`)  VALUES (?)");
-            smt.setString(1, name);
-            smt.executeUpdate();
-            authName.setText("");
+            String name = authName.getText();
 
-            con.close();
+            try (Connection con = SqlConnect.connect()) {
 
-            JOptionPane.showMessageDialog(null, "Author Created Successfully");
+                PreparedStatement smt
+                        = con.prepareStatement("INSERT INTO authors"
+                                + "(`name`)  VALUES (?)");
+                smt.setString(1, name);
+                smt.executeUpdate();
+                authName.setText("");
 
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error Message", JOptionPane.WARNING_MESSAGE);
+                con.close();
+
+                JOptionPane.showMessageDialog(null, "Author Created Successfully");
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error Message", JOptionPane.WARNING_MESSAGE);
+            }
         }
         refreshTable();
     }//GEN-LAST:event_addAuthorActionPerformed
@@ -243,20 +248,21 @@ public class Author extends javax.swing.JFrame {
 
     private void updateAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateAuthorActionPerformed
         // TODO add your handling code here:
+        if (validateInput()) {
+            try (Connection con = SqlConnect.connect()) {
 
-        try (Connection con = SqlConnect.connect()) {
+                PreparedStatement ps = con.prepareStatement("UPDATE authors set name=? where id=? ");
 
-            PreparedStatement ps = con.prepareStatement("UPDATE authors set name=? where id=? ");
+                ps.setString(1, authName.getText());
+                ps.setString(2, authorID.getText());
+                ps.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Author Is Updated");
+                authName.setText("");
+                authorID.setText("");
 
-            ps.setString(1, authName.getText());
-            ps.setString(2, authorID.getText());
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Author Is Updated");
-            authName.setText("");
-            authorID.setText("");
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Record Not Updated", "Alert", JOptionPane.WARNING_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Record Not Updated", "Alert", JOptionPane.WARNING_MESSAGE);
+            }
         }
         refreshTable();
     }//GEN-LAST:event_updateAuthorActionPerformed
@@ -294,6 +300,15 @@ public class Author extends javax.swing.JFrame {
                 new Author().setVisible(true);
             }
         });
+    }
+
+    public boolean validateInput() {
+        if (authName.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Author Name is required.");
+            authName.requestFocus();
+            return false;
+        }
+        return true;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -63,6 +63,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         bookInventoryBtn = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Librarian DashBoard");
         setResizable(false);
 
         newStudents.setText("New Students");

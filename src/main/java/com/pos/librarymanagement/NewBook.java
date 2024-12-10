@@ -90,6 +90,7 @@ public class NewBook extends javax.swing.JFrame {
         deleteBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Book Operations");
         setResizable(false);
 
         newBookPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "New Book", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
@@ -274,8 +275,6 @@ public class NewBook extends javax.swing.JFrame {
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         // TODO add your handling code here:
         this.dispose();
-//        AdminDashboard ad = new AdminDashboard();
-//        ad.setVisible(true);
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void addBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookActionPerformed
@@ -314,7 +313,7 @@ public class NewBook extends javax.swing.JFrame {
                     smt.setString(7, edition);
                     smt.setFloat(8, price);
                     smt.setString(9, formattedDate);
-                    
+
                     PreparedStatement ps
                             = con.prepareStatement("INSERT INTO `book_count`( `book_id`, `count`) VALUES (?,?)");
                     ps.setString(1, isbn);
@@ -325,7 +324,7 @@ public class NewBook extends javax.swing.JFrame {
                     this.dispose();
 
                     JOptionPane.showMessageDialog(null, "New Book Added Successfully!");
-                    refreshTable();
+
                 }
 
             } catch (Exception e) {
@@ -333,6 +332,7 @@ public class NewBook extends javax.swing.JFrame {
             }
 
         }
+        refreshTable();
     }//GEN-LAST:event_addBookActionPerformed
 
     private void jNewBookTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jNewBookTableMouseClicked
@@ -372,7 +372,7 @@ public class NewBook extends javax.swing.JFrame {
             bookEdition.setText("");
             bookPrice.setText("");
             purchasedDate.setText("");
-            
+
             refreshTable();
 
         } catch (Exception e) {
@@ -471,7 +471,36 @@ public class NewBook extends javax.swing.JFrame {
     }
 
     public boolean validInput() {
+        if (isbnNumber.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "ISBN is required.");
+            isbnNumber.requestFocus();
+            return false;
 
+        } else if (bookTitle.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Book Title is required.");
+            bookTitle.requestFocus();
+            return false;
+        } else if (bookPrice.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Book Price is required.");
+            bookPrice.requestFocus();
+            return false;
+        } else if (copiesOwned.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Copies Owned is required.");
+            copiesOwned.requestFocus();
+            return false;
+        } else if (pubYear.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Published Year is required.");
+            pubYear.requestFocus();
+            return false;
+        } else if (bookEdition.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Book Edition is required.");
+            bookEdition.requestFocus();
+            return false;
+        } else if (purchasedDate.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Purchased Date is required.");
+            purchasedDate.requestFocus();
+            return false;
+        }
         return true;
     }
 

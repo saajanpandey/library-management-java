@@ -47,7 +47,7 @@ public class LoginForm extends javax.swing.JFrame {
         userRadio = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Login");
+        setTitle("Welcome to Library Management");
         setResizable(false);
 
         usernameLabel.setText("Email");

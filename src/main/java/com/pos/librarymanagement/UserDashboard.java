@@ -41,14 +41,15 @@ public class UserDashboard extends javax.swing.JFrame {
     private void refreshTable(int id) {
         try (Connection con = SqlConnect.connect()) {
 
-            PreparedStatement ps = con.prepareStatement("Select books.name from book_issues "
+            PreparedStatement ps = con.prepareStatement("Select books.isbn,books.name from book_issues "
                     + "JOIN books on books.isbn= book_issues.book_id   WHERE book_issues.user_id=? ");
             ps.setInt(1,id);
             ResultSet rs = ps.executeQuery();
             jBookTable.setModel(DbUtils.resultSetToTableModel(rs));
-            jBookTable.getColumnModel().getColumn(0).setHeaderValue("Book Title");
+            jBookTable.getColumnModel().getColumn(0).setHeaderValue("Book ISBN");
+            jBookTable.getColumnModel().getColumn(1).setHeaderValue("Book Title");
         } catch (Exception e) {
-             JOptionPane.showMessageDialog(null, "Something Wen Wrong!");
+             JOptionPane.showMessageDialog(null, "Something Went Wrong!");
         }
     }
 
@@ -91,6 +92,7 @@ public class UserDashboard extends javax.swing.JFrame {
         logoutItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Student DashBoard");
 
         welcomeMessage.setText("Welcome");
 
@@ -130,11 +132,11 @@ public class UserDashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Book Title"
+                "Book ISBN", "Book Title"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

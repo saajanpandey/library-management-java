@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -80,6 +82,7 @@ public class IssueBook extends javax.swing.JFrame {
         backBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Issue Books");
         setResizable(false);
 
         bookJpanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Book", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
@@ -328,65 +331,91 @@ public class IssueBook extends javax.swing.JFrame {
     private void issueBookBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_issueBookBtnActionPerformed
         // TODO add your handling code here:
 
-        String studentID = studentIDText.getText();
-        String bookID = bookIsbn.getText();
-        
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("MMMM dd, yyyy");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if (validInput()) {
 
-            Date date = inputFormat.parse(issueDate.getText());
-            String formattedDate = outputFormat.format(date);
+            String studentID = studentIDText.getText();
+            String bookID = bookIsbn.getText();
 
-            try (Connection con = SqlConnect.connect()) {
-                
-                PreparedStatement psCheck = con.prepareStatement("Select count from book_count where book_id=? ");
-                 psCheck.setString(1, bookID);
-                ResultSet rsCheck =  psCheck.executeQuery();
-                rsCheck.next();
-                String patCheck = rsCheck.getString("count");
-                int countCheck = Integer.parseInt(patCheck);
-                
-                if(countCheck > 0){
-                
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("MMMM dd, yyyy");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-                PreparedStatement smt
-                        = con.prepareStatement("INSERT INTO `book_issues`(`user_id`, `book_id`, `date`) VALUES (?,?,?)");
+                Date date = inputFormat.parse(issueDate.getText());
+                String formattedDate = outputFormat.format(date);
 
-                smt.setString(1, studentID);
-                smt.setString(2, bookID);
-                smt.setString(3, formattedDate);
-                smt.executeUpdate();
-                issueDate.setText("");
-                studentIDText.setText("");
-                bookIsbn.setText("");
+                LocalDate today = LocalDate.now();
 
-                PreparedStatement ps = con.prepareStatement("Select count from book_count where book_id=? ");
-                ps.setString(1, bookID);
-                ResultSet rs = ps.executeQuery();
-                rs.next();
-                String pat = rs.getString("count");
-                int previousCount = Integer.parseInt(pat);
-                int newCount = previousCount - 1;
+                final DateTimeFormatter dtfymd
+                        = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-                PreparedStatement psInsert = con.prepareStatement("UPDATE book_count Set count=? WHERE book_id = ? ");
-                psInsert.setInt(1, newCount);
-                psInsert.setString(2, bookID);
-                psInsert.executeUpdate();
+                LocalDate date1;
+                date1 = LocalDate.parse(formattedDate, dtfymd);
 
-                con.close();
-
-                JOptionPane.showMessageDialog(null, "Book Issued");
-                }
-                else{
-                     JOptionPane.showMessageDialog(null, "There is no book in the library to issue!");
+                if (date1.isAfter(today)) {
+                    JOptionPane.showMessageDialog(null, "Book cannot be issued", "Error Message", JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
 
+                try (Connection con = SqlConnect.connect()) {
+
+                    PreparedStatement psCheck = con.prepareStatement("Select count from book_count where book_id=? ");
+                    psCheck.setString(1, bookID);
+                    ResultSet rsCheck = psCheck.executeQuery();
+                    rsCheck.next();
+                    String patCheck = rsCheck.getString("count");
+                    int countCheck = Integer.parseInt(patCheck);
+
+                    if (countCheck > 0) {
+
+                        PreparedStatement smt
+                                = con.prepareStatement("INSERT INTO `book_issues`(`user_id`, `book_id`, `date`) VALUES (?,?,?)");
+
+                        smt.setString(1, studentID);
+                        smt.setString(2, bookID);
+                        smt.setString(3, formattedDate);
+                        smt.executeUpdate();
+                        issueDate.setText("");
+                        studentIDText.setText("");
+                        bookIsbn.setText("");
+                        bookTitle.setText("");
+                        copiesText.setText("");
+                        editionText.setText("");
+                        authorText.setText("");
+                        lastNameText.setText("");
+                        publisherText.setText("");
+                        searchTextField.setText("");
+                        studentIDText.setText("");
+                        studentSearchText.setText("");
+                        firstNameText.setText("");
+
+                        PreparedStatement ps = con.prepareStatement("Select count from book_count where book_id=? ");
+                        ps.setString(1, bookID);
+                        ResultSet rs = ps.executeQuery();
+                        rs.next();
+                        String pat = rs.getString("count");
+                        int previousCount = Integer.parseInt(pat);
+                        int newCount = previousCount - 1;
+
+                        PreparedStatement psInsert = con.prepareStatement("UPDATE book_count Set count=? WHERE book_id = ? ");
+                        psInsert.setInt(1, newCount);
+                        psInsert.setString(2, bookID);
+                        psInsert.executeUpdate();
+
+                        con.close();
+
+                        JOptionPane.showMessageDialog(null, "Book Issued");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "There is no book in the library to issue!");
+                    }
+
+                }
+            } catch (SQLException | ParseException e) {
+
+                JOptionPane.showMessageDialog(null, "Book cannot be issued", "Error Message", JOptionPane.WARNING_MESSAGE);
             }
-        } catch (SQLException  | ParseException e) {
-           
-            JOptionPane.showMessageDialog(null, "Book cannot be issued", "Error Message", JOptionPane.WARNING_MESSAGE);
-        } 
+
+        }
+
     }//GEN-LAST:event_issueBookBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
@@ -427,6 +456,19 @@ public class IssueBook extends javax.swing.JFrame {
                 new IssueBook().setVisible(true);
             }
         });
+    }
+
+    public boolean validInput() {
+        if (studentIDText.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Student Id is required.");
+            studentIDText.requestFocus();
+            return false;
+
+        } else if (bookIsbn.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Book ISBN is required.");
+            return false;
+        }
+        return true;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
